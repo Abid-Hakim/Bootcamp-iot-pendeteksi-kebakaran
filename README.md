@@ -14,3 +14,29 @@ Data hasil pembacaan diproses secara lokal untuk mengendalikan indikator visual 
 | **LED Merah** | Anoda (+) -> GPIO 16 | Indikator visual status Bahaya / Kritis (*Danger*) |
 | **Buzzer Pasif** | Signal -> GPIO 18 | Alarm peringatan berupa suara melengking |
 | **Relay Module** | IN -> GPIO 26 | Kontrol sakelar otomatis (Solenoid/Pintu Evakuasi) |
+
+### Flowchart Sistem
+
+```mermaid
+flowchart TD
+    A([Mulai / Booting ESP32]) --> B[Inisialisasi GPIO, DHT22, OLED, WiFi & MQTT]
+    B --> C[Membaca Sensor: DHT22, MQ-2, Flame]
+    C --> D[Konversi ADC MQ-2 ke PPM Asap]
+    D --> E{Suhu >= 40°C AND\nAsap >= 300 PPM AND\nApi == Terdeteksi?}
+    
+    E -- Ya --> F["Status: KRITIS\n- LED Merah & Kuning: ON\n- Buzzer: ON (1000Hz)\n- Relay: ON"]
+    E -- Tidak --> G{Suhu >= 40°C AND\nAsap >= 300 PPM?}
+    G -- Ya --> H["Status: BAHAYA\n- LED Merah & Kuning: ON\n- Buzzer: ON (1000Hz)\n- Relay: OFF"]
+    G -- Tidak --> I{Suhu >= 40°C OR\nAsap >= 300 PPM OR\nApi == Terdeteksi?}
+    I -- Ya --> J["Status: PERINGATAN\n- LED Kuning: ON\n- Aktuator Lain: OFF"]
+    I -- Tidak --> K["Status: AMAN\n- Semua Aktuator: OFF"]
+    
+    F --> L[Tampilkan Data pada Layar OLED]
+    H --> L
+    J --> L
+    K --> L
+    
+    L --> M[Publish Payload JSON via MQTT]
+    M --> N["Node-RED: Update UI & Append ke database_sensor.csv"]
+    N --> O[Delay 2 Detik]
+    O --> C
