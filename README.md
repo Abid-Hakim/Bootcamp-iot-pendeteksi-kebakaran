@@ -39,4 +39,4 @@ flowchart TD
     L --> M[Publish Payload JSON via MQTT]
     M --> N["Node-RED: Update UI & Append ke database_sensor.csv"]
     N --> O[Delay 2 Detik]
-    O --> C
+    O ([Selesai])
