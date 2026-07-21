@@ -1,6 +1,8 @@
 # Bootcamp-iot-pendeteksi-kebakaran
 Sistem Peringatan Dini Kebakaran Berbasis IoT ini dirancang untuk mendeteksi potensi bahaya kebakaran secara real-time di dalam ruangan. Sistem menggunakan mikrokontroler ESP32 untuk membaca data dari sensor suhu (DHT22), sensor konsentrasi asap (MQ-2), dan sakelar simulasi deteksi api (Flame Sensor).
 
+Data hasil pembacaan diproses secara lokal untuk mengendalikan indikator visual (LED Kuning & Merah), alarm suara (Buzzer Pasif), serta aktuator darurat (Relay pelepas pintu/sistem pemadam). Selain itu, sistem menampilkan informasi pada layar OLED SSD1306, meneruskan data telemetry menggunakan protokol MQTT ke broker HiveMQ, serta melakukan pembuatan log database otomatis ke file CSV melalui dashboard Node-RED.
+
 | Nama Komponen | Komponen,Pin | Fungsi |
 | :--- | :--- | :--- |
 | **ESP32 DevKit v4** | Board Utama | Mikrokontroler pemroses data & komunikasi WiFi/MQTT |
